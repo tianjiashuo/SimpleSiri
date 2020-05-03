@@ -46,9 +46,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private ImageButton backButtom = null;
     private ImageButton changeBackButtom = null;
-    private ImageButton personButtom = null;
-    private ImageButton reloadButton = null;
-    private ImageButton cancelButton = null;
+    private ImageButton changeNameButtom = null;
     private ImageButton soundButton = null;
     private EditText mResultText;
     private ImageView wholeBG = null;
@@ -86,7 +84,18 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         //更换背景图按钮
         changeBackButtom = (ImageButton)findViewById(R.id.home_photo);
         initPhotoSelect();
-
+        changeNameButtom = (ImageButton)findViewById(R.id.changename);
+        changeNameButtom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Intent intent = new Intent(HomeActivity.this, ChangeNameActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("starname", tv1.getText().toString());
+                intent.putExtras(bundle);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -171,24 +180,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             open();
         });
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 0: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted
-                    // request successfully, handle you transactions
-                } else {
-                    // permission denied
-                    // request failed
-                }
-                return;
-            }
-            default:
-                break;
-        }
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

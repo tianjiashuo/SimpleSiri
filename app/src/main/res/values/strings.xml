@@ -2,4 +2,5 @@
     <string name="app_name">造梦空间</string>
     <string name="starname">人名</string>
     <string name="tishi">点击说话</string>
+    <string name="changename">修改名字</string>
 </resources>

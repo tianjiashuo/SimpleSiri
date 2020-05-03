@@ -33,7 +33,7 @@
         </activity>
         <activity android:name="com.example.simplesiri.HomeActivity"></activity>
         <activity android:name="com.example.simplesiri.StarActivity"></activity>
-
+        <activity android:name="com.example.simplesiri.ChangeNameActivity"></activity>
         <provider
             android:authorities="com.example.simplesiri.fileprovider"
             android:exported="false"
