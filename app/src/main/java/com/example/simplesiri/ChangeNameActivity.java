@@ -41,22 +41,15 @@ public class ChangeNameActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
-                intent.setClass(ChangeNameActivity.this, HomeActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("starname", editName.getText().toString());
+                bundle.putString("nameResponse", editName.getText().toString());
                 intent.putExtras(bundle);
-                startActivity(intent);
+                setResult(200,intent);
                 finish();
             }
         });
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-            Bundle bundle = data.getExtras();
-            Toast.makeText(this, bundle.getString("starname"), Toast.LENGTH_LONG).show();
-        }
-    }
+
+
 
 }

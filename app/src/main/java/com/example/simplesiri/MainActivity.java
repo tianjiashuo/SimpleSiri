@@ -32,9 +32,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 Intent intent = new Intent(MainActivity.this, StarActivity.class);
-                Bundle bundle = new Bundle();
-                intent.putExtras(bundle);
-                startActivityForResult(intent, 1);
+                startActivity(intent);
             }
         });
 

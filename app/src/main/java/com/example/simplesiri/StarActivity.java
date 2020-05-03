@@ -22,12 +22,18 @@ public class StarActivity extends AppCompatActivity {
     private ListView listView;
     private String[] stars = {"华晨宇","孙燕姿","林俊杰","绒绒","飒飒"};
     private List<Map<String, Object>> listems = new ArrayList<Map<String, Object>>();
-    private Button searchButton;
+
+    private DBHelper dbHelper;
+    private String[] name, ids;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_star_layout);
+//        dbHelper = DBHelper.getInstance(this);
+//        changeAdapter(dbHelper.queryAllCities());
+
         for (int i = 0; i < stars.length; i++) {
             Map<String, Object> listem = new HashMap<>();
             listem.put("name", stars[i]);
@@ -44,12 +50,22 @@ public class StarActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setClass(StarActivity.this, HomeActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("starname", stars[position]);
+                bundle.putString("starname", listems.get(position).get("name").toString());
                 intent.putExtras(bundle);
                 startActivity(intent);
-                finish();
             }
         });
     }
+//    private void changeAdapter(List<Map<String, Object>> list){
+//        ids = new String[list.size()];
+//        name = new String[list.size()];
+//        for(int i=0;i<list.size();i++){
+//            ids[i] = list.get(i).get("id").toString();
+//            name[i] = list.get(i).get("cityname").toString();
+//        }
+//        myAdapter = new MyAdapter(name, ids, deleteButton);
+//        listView.setAdapter(myAdapter);
+//    }
+
 
 }

@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -72,18 +73,19 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         String value = bundle.getString("starname");
         tv1.setText(value);
 
+        //返回按钮
         backButtom = (ImageButton) findViewById(R.id.back);
         backButtom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Intent intent = new Intent(HomeActivity.this, StarActivity.class);
-                startActivityForResult(intent, 1);
+                HomeActivity.this.finish();
             }
         });
         wholeBG = (ImageView) findViewById(R.id.img_bg);
         //更换背景图按钮
         changeBackButtom = (ImageButton)findViewById(R.id.home_photo);
         initPhotoSelect();
+        //改名按钮
         changeNameButtom = (ImageButton)findViewById(R.id.changename);
         changeNameButtom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,15 +94,22 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 Bundle bundle = new Bundle();
                 bundle.putString("starname", tv1.getText().toString());
                 intent.putExtras(bundle);
-                startActivity(intent);
-                finish();
+                startActivityForResult(intent,100);
             }
+
         });
+
+        findViewById(R.id.sound).setOnClickListener(this);
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
     }
+
+    Vibrator vibrator;
 
     @Override
     public void onClick(View v) {
         soundVoice();
+        //震动30毫秒
+        vibrator.vibrate(30);
     }
     //开始说话：
 
@@ -156,6 +165,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         Bitmap bmp = activity.getWindow().getDecorView().getDrawingCache();
         return bmp;
     }
+
+    private void initPhotoSelect() {
+        changeBackButtom.setOnClickListener(v -> {
+            open();
+        });
+    }
     //打开图片选择
     private void open() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -175,22 +190,21 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void initPhotoSelect() {
-        changeBackButtom.setOnClickListener(v -> {
-            open();
-        });
-    }
+
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_CODE_CHOOSE) {
+
+        if (requestCode==100 && resultCode==200) {
+            Bundle bundle =data.getExtras();
+            String response =bundle.getString("nameResponse");
+            tv1.setText(response);
+            }
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_CHOOSE) {
                 Glide.with(this).load(Matisse.obtainResult(data).get(0)).into(wholeBG);
             }
         }
-    }
-
 
 }
