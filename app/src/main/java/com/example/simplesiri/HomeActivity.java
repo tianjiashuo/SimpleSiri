@@ -10,13 +10,11 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -24,11 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.util.Util;
-import com.example.voicesimulation.R;
 import com.bumptech.glide.Glide;
 
-import com.example.simplesiri.ExGlideEngine;
 import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
@@ -43,6 +38,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import Response.Response;
+import Util.BlurTransformation;
+import Util.ExGlideEngine;
+import Util.SoundPlayUtils;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
+
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener{
 
     private ImageButton backButtom = null;
@@ -50,8 +52,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton changeNameButtom = null;
     private ImageButton soundButton = null;
     private EditText mResultText;
+    private EditText mResponseText;
     private ImageView wholeBG = null;
     private TextView tv1 = null;
+    private Integer starId = 0;
     private final int REQUEST_CODE_CHOOSE = 1;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -60,11 +64,17 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_home);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        //录音按钮
+
+        Glide.with(this).load(R.drawable.background)
+                .apply(bitmapTransform(new BlurTransformation(this,25)))
+                .into((ImageView) findViewById(R.id.img_bg));
+        SoundPlayUtils.init(this);
+        //说话
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "= 5eabf03c");
         soundButton = (ImageButton)findViewById(R.id.sound);
         soundButton.setOnClickListener(this);
         mResultText = (EditText)findViewById(R.id.result);
+        mResponseText = (EditText)findViewById(R.id.response);
 
         //显示当前人物
         tv1 =  findViewById(R.id.name);
@@ -72,6 +82,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         Bundle bundle = intent.getExtras();
         String value = bundle.getString("starname");
         tv1.setText(value);
+        starId = bundle.getInt("starId");
 
         //返回按钮
         backButtom = (ImageButton) findViewById(R.id.back);
@@ -108,11 +119,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         soundVoice();
-        //震动30毫秒
-        vibrator.vibrate(30);
+        //震动40毫秒
+        vibrator.vibrate(40);
     }
-    //开始说话：
-
+    //语音识别
     private void soundVoice() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             String arrs[] = {Manifest.permission.RECORD_AUDIO};
@@ -131,15 +141,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
             dialog.show();
-            Toast.makeText(this, "请开始说话", Toast.LENGTH_SHORT).show();
         }
-    }
-    //说话的回调结果：
-
-    private void printResult(RecognizerResult results) {
-        String text = parseIatResult(results.getResultString());
-        // 自动填写地址
-        mResultText.append(text);
     }
 
     public static String parseIatResult(String json) {
@@ -158,6 +160,21 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
         return ret.toString();
+    }
+    //说话的回调结果：
+    private void printResult(RecognizerResult results) {
+        String text = parseIatResult(results.getResultString());
+        // 填写
+        if(text.equals("。")||text.equals("？")||text.equals(",")||text.equals("！")||text.equals(".")){
+            mResultText.append(text);
+        }
+        else{
+            mResultText.setText(text);
+            Response response = new Response();
+            String responseText = response.classify(starId,mResultText.getText().toString());
+            mResponseText.setText(responseText);
+        }
+
     }
 
     public static Bitmap capture(Activity activity) {
@@ -189,9 +206,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     .forResult(REQUEST_CODE_CHOOSE);
         }
     }
-
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

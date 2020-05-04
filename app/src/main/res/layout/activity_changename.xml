@@ -9,7 +9,7 @@
         android:id="@+id/img_bg"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@drawable/back2"
+        android:background="@drawable/background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
     <TextView
@@ -44,4 +44,14 @@
                 android:background="@drawable/yes"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/editname" />
+
+    <ImageButton
+        android:id="@+id/shiyan"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="280dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/editname" />
 </androidx.constraintlayout.widget.ConstraintLayout>

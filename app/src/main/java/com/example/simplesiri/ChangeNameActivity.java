@@ -1,27 +1,37 @@
 package com.example.simplesiri;
 
-import android.app.Activity;
-import android.app.AppComponentFactory;
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
+
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import com.example.voicesimulation.R;
+import com.bumptech.glide.Glide;
+import com.example.simplesiri.R;
+
+import Util.BlurTransformation;
+import Util.SoundPlayUtils;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 
 public class ChangeNameActivity extends AppCompatActivity {
     private EditText editName;
     private ImageButton confirmButton;
+
+    private ImageButton ceshiButton;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -31,7 +41,10 @@ public class ChangeNameActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
-       editName  =  findViewById(R.id.editname);
+        Glide.with(this).load(R.drawable.background)
+                .apply(bitmapTransform(new BlurTransformation(this,25)))
+                .into((ImageView) findViewById(R.id.img_bg));
+       editName = findViewById(R.id.editname);
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
         String value = bundle.getString("starname");
@@ -48,6 +61,28 @@ public class ChangeNameActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        ceshiButton = (ImageButton)findViewById(R.id.shiyan);
+        SoundPlayUtils.init(this);
+
+        ceshiButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SoundPlayUtils.play(1);
+            }
+        });
+
+    }
+//    public void toast(){
+//        Toast.makeText(this,"1",Toast.LENGTH_LONG).show();
+//    }
+    public void play(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.MEDIA_CONTENT_CONTROL) != PackageManager.PERMISSION_GRANTED) {
+            String arrs[] = {Manifest.permission.MEDIA_CONTENT_CONTROL};
+            ActivityCompat.requestPermissions(this, arrs, 1);
+        }else{
+            SoundPlayUtils.play(1);
+        }
     }
 
 

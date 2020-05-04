@@ -6,18 +6,23 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.voicesimulation.R;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import Util.BlurTransformation;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 public class StarActivity extends AppCompatActivity {
 
@@ -34,6 +39,10 @@ public class StarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_star_layout);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+        Glide.with(this).load(R.drawable.background)
+                .apply(bitmapTransform(new BlurTransformation(this,25)))
+                .into((ImageView) findViewById(R.id.starback));
 
         for (int i = 0; i < stars.length; i++) {
             Map<String, Object> listem = new HashMap<>();
