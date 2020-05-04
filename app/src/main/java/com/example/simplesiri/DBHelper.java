@@ -34,7 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
     //创建数据库的语句
     private String createDBSql =
             "create table stars(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "name TEXT NOT NULL);";
+                    "name TEXT NOT NULL,"+"head TEXT NOT NULL);";
 
     //数据库创建时调用
     @Override
