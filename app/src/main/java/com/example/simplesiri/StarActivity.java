@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -23,12 +22,10 @@ import java.util.Map;
 public class StarActivity extends AppCompatActivity {
 
     private ListView listView;
-    private String[] stars = {"华晨宇","孙燕姿","林俊杰","彭昱畅","蔡依林"};
+    private String[] stars = {"华晨宇","毛不易","杨幂","彭昱畅","张子枫"};
+    private int[] headIds = new int[] { R.drawable.huachenyu, R.drawable.maobuyi,
+            R.drawable.yangmi, R.drawable.pengyuchang,R.drawable.zhangzifen};
     private List<Map<String, Object>> listems = new ArrayList<Map<String, Object>>();
-
-    private DBHelper dbHelper;
-    private String[] name, ids;
-
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -37,18 +34,24 @@ public class StarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_star_layout);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-//        dbHelper = DBHelper.getInstance(this);
-//        changeAdapter(dbHelper.queryAllCities());
 
         for (int i = 0; i < stars.length; i++) {
             Map<String, Object> listem = new HashMap<>();
             listem.put("name", stars[i]);
+            listem.put("headId",headIds[i]);
+            listem.put("starId",i+1);
             listems.add(listem);
         }
         listView = (ListView) findViewById(R.id.star_listview);
-        listView.setAdapter(new SimpleAdapter(getApplication(), listems,
-                R.layout.activity_star_listview_item, new String[]{"name"},
-                new int[]{R.id.listview_item_textview}));
+
+        SimpleAdapter adapter = new SimpleAdapter(this, listems,
+                R.layout.activity_star_listview_item, new String[] { "name",
+                "headId" }, new int[] {
+                R.id.listview_item_textview,
+                R.id.head});
+        // 给ListView设置适配器
+        listView.setAdapter(adapter);
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -57,22 +60,12 @@ public class StarActivity extends AppCompatActivity {
                 intent.setClass(StarActivity.this, HomeActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("starname", listems.get(position).get("name").toString());
+                bundle.putInt("starId", (int)listems.get(position).get("starId"));
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
     }
-    //根据数据库中数据为ListView设置适配器
-//    private void changeAdapter(List<Map<String, Object>> list){
-//        ids = new String[list.size()];
-//        name = new String[list.size()];
-//        for(int i=0;i<list.size();i++){
-//            ids[i] = list.get(i).get("id").toString();
-//            name[i] = list.get(i).get("name").toString();
-//        }
-//        myAdapter = new MyAdapter(name, ids, deleteButton);
-//        listView.setAdapter(myAdapter);
-//    }
 
 
 }

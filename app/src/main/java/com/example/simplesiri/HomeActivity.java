@@ -134,7 +134,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "请开始说话", Toast.LENGTH_SHORT).show();
         }
     }
-    //回调结果：
+    //说话的回调结果：
 
     private void printResult(RecognizerResult results) {
         String text = parseIatResult(results.getResultString());
