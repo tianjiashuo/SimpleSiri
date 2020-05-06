@@ -31,8 +31,6 @@ public class ChangeNameActivity extends AppCompatActivity {
     private EditText editName;
     private ImageButton confirmButton;
 
-    private ImageButton ceshiButton;
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,20 +60,10 @@ public class ChangeNameActivity extends AppCompatActivity {
             }
         });
 
-        ceshiButton = (ImageButton)findViewById(R.id.shiyan);
         SoundPlayUtils.init(this);
 
-        ceshiButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SoundPlayUtils.play(1);
-            }
-        });
-
     }
-//    public void toast(){
-//        Toast.makeText(this,"1",Toast.LENGTH_LONG).show();
-//    }
+
     public void play(){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.MEDIA_CONTENT_CONTROL) != PackageManager.PERMISSION_GRANTED) {
             String arrs[] = {Manifest.permission.MEDIA_CONTENT_CONTROL};

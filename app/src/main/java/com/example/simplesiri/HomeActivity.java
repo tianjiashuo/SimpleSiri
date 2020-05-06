@@ -65,9 +65,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
+        wholeBG = (ImageView) findViewById(R.id.img_bg);
         Glide.with(this).load(R.drawable.background)
                 .apply(bitmapTransform(new BlurTransformation(this,25)))
-                .into((ImageView) findViewById(R.id.img_bg));
+                .into(wholeBG);
         SoundPlayUtils.init(this);
         //说话
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "= 5eabf03c");
@@ -92,7 +93,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 HomeActivity.this.finish();
             }
         });
-        wholeBG = (ImageView) findViewById(R.id.img_bg);
+
         //更换背景图按钮
         changeBackButtom = (ImageButton)findViewById(R.id.home_photo);
         initPhotoSelect();
@@ -107,7 +108,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtras(bundle);
                 startActivityForResult(intent,100);
             }
-
         });
 
         findViewById(R.id.sound).setOnClickListener(this);
@@ -217,7 +217,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             tv1.setText(response);
             }
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_CHOOSE) {
-                Glide.with(this).load(Matisse.obtainResult(data).get(0)).into(wholeBG);
+                Glide.with(this).load(Matisse.obtainResult(data).get(0))
+                    .apply(bitmapTransform(new BlurTransformation(this,25)))
+                    .into(wholeBG);
             }
         }
 

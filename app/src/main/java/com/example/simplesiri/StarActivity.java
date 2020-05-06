@@ -4,16 +4,23 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,10 +34,11 @@ import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 public class StarActivity extends AppCompatActivity {
 
     private ListView listView;
-    private String[] stars = {"华晨宇","毛不易","杨幂","彭昱畅","张子枫"};
+    private String[] stars = {"华晨宇","毛不易","杨幂","撒贝宁","张子枫"};
     private int[] headIds = new int[] { R.drawable.huachenyu, R.drawable.maobuyi,
-            R.drawable.yangmi, R.drawable.pengyuchang,R.drawable.zhangzifen};
+            R.drawable.yangmi, R.drawable.sabeining,R.drawable.zhangzifeng};
     private List<Map<String, Object>> listems = new ArrayList<Map<String, Object>>();
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -53,14 +61,8 @@ public class StarActivity extends AppCompatActivity {
         }
         listView = (ListView) findViewById(R.id.star_listview);
 
-        SimpleAdapter adapter = new SimpleAdapter(this, listems,
-                R.layout.activity_star_listview_item, new String[] { "name",
-                "headId" }, new int[] {
-                R.id.listview_item_textview,
-                R.id.head});
-        // 给ListView设置适配器
-        listView.setAdapter(adapter);
-
+        MyAdapter myAdapter = new MyAdapter(stars,headIds);
+        listView.setAdapter(myAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -74,6 +76,53 @@ public class StarActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+    }
+    private class MyAdapter extends BaseAdapter {
+        private class ViewSet{
+            ImageView head;
+            TextView name;
+        }
+        private String[] stars ;
+        private int[] headIds;
+        public MyAdapter(String[] stars, int[] headIds){
+            this.stars = stars;
+            this.headIds = headIds;
+        }
+        @Override
+        public int getCount() {
+            return stars.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return position;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            ViewSet viewSet = null;
+            if(convertView == null){
+                viewSet = new ViewSet();
+                convertView = LayoutInflater.from(getApplication()).inflate(R.layout.activity_star_listview_item, null);
+                viewSet.name = (TextView)convertView.findViewById(R.id.listview_item_textview);
+                viewSet.head = (ImageView) convertView.findViewById(R.id.head);
+                Glide.with(StarActivity.this)
+                    .load(headIds[position])
+                    .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                    .into(viewSet.head);
+                convertView.setTag(viewSet);
+            }else{
+                viewSet = (ViewSet)convertView.getTag();
+            }
+            viewSet.name.setText(stars[position]);
+            return convertView;
+        }
     }
 
 

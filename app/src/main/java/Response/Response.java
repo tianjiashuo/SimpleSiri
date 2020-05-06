@@ -18,14 +18,6 @@ public class Response extends AppCompatActivity {
 
         SoundPlayUtils.init(this);
     }
-//    public String text(Integer starId,String string) {
-//        String content1 = ".*你好.*";
-//        if (string.matches(content1)) {
-//            SoundPlayUtils.play(1);
-//            return "你也好";
-//        }
-//        return "没有匹配语句";
-//    }
     public String classify(Integer starId,String string){
         switch (starId){
             case (1):
@@ -41,7 +33,7 @@ public class Response extends AppCompatActivity {
                 String response3 = yangResponse.match(string);
                 return response3;
             case(4):
-                PengResponse pengResponse = new PengResponse();
+                SaResponse pengResponse = new SaResponse();
                 String response4 = pengResponse.match(string);
                 return response4;
             case(5):

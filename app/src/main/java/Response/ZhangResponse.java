@@ -16,11 +16,12 @@ public class ZhangResponse extends AppCompatActivity {
         SoundPlayUtils.init(this);
     }
     public String match(String string) {
-        String content1 = ".*你好.*";
-        if (string.matches(content1)) {
-            SoundPlayUtils.play(1);
-            return "dalabengba";
+        String content1 = ".*你是谁.*";
+        String content1_2 = ".*你叫.*";
+        if (string.matches(content1)||string.matches(content1_2)) {
+            SoundPlayUtils.play(15);
+            return "我是张子枫";
         }
-        return "nono";
+        return "匹配失败";
     }
 }
